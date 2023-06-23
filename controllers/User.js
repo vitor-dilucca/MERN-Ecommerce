@@ -5,6 +5,8 @@ exports.signup = async (req, res) => {
   console.log('req.body', req.body);
   try {
     const user = await User.create(req.body);
+    user.salt = undefined
+    user.hashed_password = undefined
     res.json({
       user: user
     });
