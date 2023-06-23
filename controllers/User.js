@@ -1,4 +1,5 @@
 const User = require('../Models/user');
+const {errorHandler} = require('../helpers/dbErrorHandler')
 
 exports.signup = async (req, res) => {
   console.log('req.body', req.body);
@@ -9,7 +10,7 @@ exports.signup = async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({
-      error: err.message
+      error: errorHandler(err)
     });
   }
 };
