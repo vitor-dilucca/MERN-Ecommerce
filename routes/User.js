@@ -6,6 +6,10 @@ const {userSignupValidator}=require('../validator/index')
 
 router.post('/signup', userSignupValidator, signup)
 router.post('/signin', signin)
-router.post('/logout', logout)
+router.get('/logout', logout)
+
+router.get('/hello',(req,res)=>{
+  res.send('hello there')
+})
 
 module.exports = router
