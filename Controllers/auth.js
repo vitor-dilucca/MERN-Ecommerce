@@ -47,7 +47,7 @@ exports.logout = async (req, res) => {
   res.json({message:"Signout success"})
 }
 
-exports.requireSignin = expressjwt({
+exports.requireSignIn = expressjwt({
   secret: process.env.JWT_SECRET,
   algorithms: ['HS256'],
   userProperty: 'auth'
