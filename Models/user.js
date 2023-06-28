@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const crypto = require('crypto')
-const {v1: uuidv1} = require('uuid')
+const bcrypt = require('bcrypt')
+const { v1: uuidv1 } = require('uuid')
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -48,14 +49,37 @@ userSchema.virtual('password')
   })
 
 userSchema.methods = {
+  authenticate: function (plainText) {
+    return this.encryptPassword(plainText) === this.hashed_password
+  },
+
   encryptPassword: function (password) {
     if (!password) return '';
     try {
       return crypto.createHmac('sha1', this.salt)
         .update(password)
         .digest('hex')
-    }catch(err){
+    } catch (err) {
       return ""
+    }
+  },
+
+  //codigo ruim do prof usando lib crypto para encriptar senha
+  /* comparePassword: async function (candidatePassword) {
+    const hash = crypto.createHash('sha1').update(candidatePassword).digest('hex');
+    const isMatch = this.hashed_password === hash;
+    return isMatch;
+  } */
+  
+  //codigo top meu usando bcrypt
+  comparePassword: async function (candidatePassword) {
+    try {
+      const isMatch = await bcrypt.compare(candidatePassword, this.hashed_password);
+      return isMatch;
+    } catch (err) {
+      return res.status(401).json({
+        err: 'Please provide valid password'
+      })
     }
   }
 }
